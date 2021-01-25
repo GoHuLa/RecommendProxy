@@ -1,16 +1,7 @@
 const express = require('express');
-const bodyparser = require('body-parser');
-const { createProxyMiddleware } = require('http-proxy-middleware')
+const path = require('path')
 
 const app = express();
-app.use(bodyparser.json());
+app.use(express.static(path.resolve(__dirname, './public')))
 
-const proxyReviews = createProxyMiddleware({
-  target: 'http://localhost:3000/',
-  changeOrigin: true,
-});
-
-app.use('/api/reviews', proxyReviews);
-app.use('/api/reviews/:id', proxyReviews);
-
-app.listen(3001);
+app.listen(3000);

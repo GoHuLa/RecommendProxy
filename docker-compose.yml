@@ -1,8 +1,16 @@
 version: '3.7'
 
 services:
+  proxy:
+    image: fec/proxy
+    ports:
+      - 80:3000
+    environment:
+      - REVIEWS=reviews:3001
+      - PRODUCTS=products:3002
+      - RECOMMENDED=products:3003
   reviews:
-    image: jclasley/fec:latest
+    image: jclasley/fec:ec2
     # command: sh -c "npm install && npm run start"
     # working_dir: /reviews
     ports:
@@ -10,6 +18,7 @@ services:
     # volumes:
     #     - ./:/reviews
     environment:
+      - EC2_IP=52.53.221.54
       - MONGO_URL=mongodb://mongo:27017/etsy
       - PORT=3001
   products:
@@ -29,13 +38,12 @@ services:
   mongo:
     image: mongo:latest
     volumes:
-      - fec:/data/db
+       - fec:/data/db
     restart: always
     ports: 
-      - 27017:27017
+     - 27017:27017
     environment:
       MONGO_INITDB_DATABASE: 'etsy'
       
-
 volumes:
   fec:
